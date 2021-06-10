@@ -7,6 +7,7 @@
     "querystring_params": ["*"],
     "output_encoding": "no-op",
     "headers_to_pass": ["*"],
+    {{ include "jwt_valid.tmpl" }},
     "backend": [
     {
         "url_pattern": "{{ .url_pattern }}",
@@ -29,6 +30,7 @@
     "querystring_params": ["*"],
     "output_encoding": "no-op",
     "headers_to_pass": ["*"],
+    {{ include "jwt_valid.tmpl" }},
     "backend": [
     {
         "url_pattern": "{{range $index_for_uri, $not_used_element2 := $.range -}} {{- if lt $index_for_uri $index_in_range -}} /{{"{"}}n_{{$index_for_uri}}{{"}" -}} {{end}}{{end}}",

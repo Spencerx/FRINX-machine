@@ -7,6 +7,7 @@
     "endpoint": "/api/{{$host}}/rests/operations{{range $index_for_uri, $not_used_element2 := $.range -}} {{- if le $index_for_uri $index_in_range -}} /{{"{"}}n_{{$index_for_uri}}{{"}" -}} {{end}}{{end}}",
     "method": "POST",
     {{ include "uniconfig_partial_1.tmpl" }}
+    {{ include "jwt_valid.tmpl" }},
     "backend": [
     {
         "url_pattern": "/rests/operations{{range $index_for_uri, $not_used_element2 := $.range -}} {{- if le $index_for_uri $index_in_range -}} /{{"{"}}n_{{$index_for_uri}}{{"}" -}} {{end}}{{end}}",
@@ -33,6 +34,7 @@
     "endpoint": "/api/{{$host}}/rests/data{{range $index_for_uri, $not_used_element2 := $.range -}} {{- if le $index_for_uri $index_in_range -}} /{{"{"}}n_{{$index_for_uri}}{{"}" -}} {{end}}{{end}}",
     "method": "{{$method}}",
     {{ include "uniconfig_partial_1.tmpl" }}
+    {{ include "jwt_valid.tmpl" }},
     "backend": [
     {
         "url_pattern": "/rests/data{{range $index_for_uri, $not_used_element2 := $.range -}} {{- if le $index_for_uri $index_in_range -}} /{{"{"}}n_{{$index_for_uri}}{{"}" -}} {{end}}{{end}}",

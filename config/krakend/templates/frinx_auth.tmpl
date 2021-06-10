@@ -1,0 +1,37 @@
+{
+    "endpoint": "/login",
+    "backend": [
+        {
+            "url_pattern": "/",
+            "extra_config": {
+                "github.com/devopsfaith/krakend-oauth2-clientcredentials": {
+                    "client_id": "krakend-api-gateway",
+                    "client_secret": "fafa48e1-1492-4bf8-abe9-5dc8240cb276",
+                    "token_url": "http://keycloak:8080/auth/realms/master/protocol/openid-connect/token",
+                    "endpoint_params": {
+                        "client_id": ["krakend-api-gateway"],
+                        "client_secret": ["fafa48e1-1492-4bf8-abe9-5dc8240cb276"]
+                    }
+                },
+                "github.com/devopsfaith/krakend-martian": {
+                    "fifo.Group": {
+                        "scope": ["request", "response"],
+                        "aggregateErrors": false,
+                        "modifiers": [
+                            {
+                                "header.Modifier": {
+                                    "scope": ["request"],
+                                    "name" : "Accept",
+                                    "value" : "application/json"
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            "host": [
+                "frinx-frontend:8888"
+            ]
+        }
+    ]
+}
