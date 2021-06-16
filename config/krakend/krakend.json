@@ -17,26 +17,35 @@
       "allow_methods": [
         "GET",
         "HEAD",
-        "POST"
+        "POST",
+        "PUT"
       ],
-      "allow_credentials": true
+      "expose_headers": [
+        "X-Requested-With",
+        "Access-Control-Allow-Headers",
+        "Access-Control-Allow-Origin",
+        "Access-Control-Allow-Methods",
+        "set-cookie",
+        "cookie",
+        "KEYCLOAK_IDENTITY"
+      ],
+      "max_age": "12h",
+      "allow_headers": [
+        "*",
+        "Cookie"
+      ],
+      "allow_credentials": true,
+      "debug": true
     },
     "github_com/devopsfaith/krakend-gologging": {
       "level": "WARNING",
       "prefix": "[KRAKEND]",
       "syslog": false,
       "stdout": true
-    },
-    "github_com/devopsfaith/krakend-oauth2-clientcredentials": {
-      "endpoint_params": {},
-      "client_id": "krakend-api-gateway",
-      "client_secret": "fafa48e1-1492-4bf8-abe9-5dc8240cb276",
-      "token_url": "http://localhost:8403/auth/realms/master/protocol/openid-connect/token",
-      "scopes": "openid"
     }
   },
   "endpoints": [
-    {{ template "frinx_auth.tmpl" }},
+    {{ template "frinx_auth.tmpl" .frinx_auth}},
     {{ template "workflow_proxy.tmpl" .workflow_proxy_settings.endpoints }},
     {{ template "workflow_proxy.tmpl" .workflow_proxy_settings_deprecated.endpoints }},
     {{ template "uniconfig.tmpl" .uniconfig_settings }},

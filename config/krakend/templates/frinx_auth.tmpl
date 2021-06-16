@@ -1,36 +1,134 @@
 {
     "endpoint": "/login",
+    "output_encoding": "no-op",
+    "headers_to_pass": [
+        "Cookie"
+    ],
     "backend": [
-        {
-            "url_pattern": "/",
+        {        
+            "encoding": "no-op",
             "extra_config": {
-                "github.com/devopsfaith/krakend-oauth2-clientcredentials": {
-                    "client_id": "krakend-api-gateway",
-                    "client_secret": "fafa48e1-1492-4bf8-abe9-5dc8240cb276",
-                    "token_url": "http://keycloak:8080/auth/realms/master/protocol/openid-connect/token",
-                    "endpoint_params": {
-                        "client_id": ["krakend-api-gateway"],
-                        "client_secret": ["fafa48e1-1492-4bf8-abe9-5dc8240cb276"]
-                    }
-                },
-                "github.com/devopsfaith/krakend-martian": {
-                    "fifo.Group": {
-                        "scope": ["request", "response"],
-                        "aggregateErrors": false,
-                        "modifiers": [
-                            {
-                                "header.Modifier": {
-                                    "scope": ["request"],
-                                    "name" : "Accept",
-                                    "value" : "application/json"
-                                }
-                            }
-                        ]
-                    }
+                "github.com/devopsfaith/krakend-lua/proxy/backend": {
+                    "allow_open_libs": true,
+                    "post": "local r = response.load(); print('KEYCLOAK', r:headers('KEYCLOAK_IDENTITY_LEGACY'));",
+                    "live": true
                 }
             },
+            "url_pattern": "/auth/realms/master/protocol/openid-connect/auth?response_type=code&client_id=frinx-machine&redirect_uri=http://10.255.246.93/token",
             "host": [
-                "frinx-frontend:8888"
+                "http://10.255.246.93:8081"
+            ]
+        }
+    ]
+},
+{
+    "endpoint": "/login1",
+    "output_encoding": "no-op",
+    "headers_to_pass": [
+        "Cookie"
+    ],
+    "querystring_params": [
+        "access_token"
+    ],
+    "backend": [
+        {        
+            "encoding": "no-op",
+            "url_pattern": "/auth/realms/master/protocol/openid-connect/auth?response_type=token&client_id=frinx-machine&redirect_uri=http://10.255.246.93/token1",
+            "host": [
+                "http://10.255.246.93:8081"
+            ]
+        }
+    ]
+},
+{
+    "endpoint": "/token",
+    "method": "GET",
+    "output_encoding": "no-op",
+    "extra_config": {
+        "github.com/devopsfaith/krakend-lua/router": {
+            "sources": ["parser.lua"],
+            "allow_open_libs": true,
+            "pre":  "local r=ctx.load(); print('Header code', r:headers('Code'));",
+            "live": true
+        }
+    },
+    "backend": [
+        {
+            "allow": [
+                "*",
+                "Cookie"
+            ],
+            "extra_config": {
+                "github.com/devopsfaith/krakend-lua/proxy/backend": {
+                    "sources": ["parser1.lua"],
+                    "allow_open_libs": true,
+                    "post": "local r = response.load(); splitMe('&', r);",
+                    "live": true
+                }
+            },
+            "url_pattern": "/success",
+            "encoding": "no-op",
+            "host": [
+                "http://127.0.0.1:8080"
+            ]
+        }
+    ]
+},
+{
+    "endpoint": "/token1",
+    "method": "GET",
+    "output_encoding": "no-op",
+    "extra_config": {
+        "github.com/devopsfaith/krakend-lua/router": {
+            "sources": ["parser2.lua"],
+            "allow_open_libs": true,
+            "live": true
+        }
+    },
+    "backend": [
+        {
+            "allow": [
+                "*",
+                "Cookie"
+            ],
+            "extra_config": {
+                "github.com/devopsfaith/krakend-lua/proxy/backend": {
+                    "sources": ["parser2.lua"],
+                    "allow_open_libs": true,
+                    "post": "local r = response.load(); splitMe('&', r);",
+                    "live": true
+                }
+            },
+            "url_pattern": "/success",
+            "encoding": "no-op",
+            "host": [
+                "http://127.0.0.1:8080"
+            ]
+        }
+    ]
+},
+{
+    "endpoint": "/success",
+    "output_encoding": "negotiate",
+    "method": "POST",
+    "output_encoding": "no-op",
+    "headers_to_pass":[  
+        "*"
+    ],
+    "backend": [
+        {
+            "extra_config": {
+                "github.com/devopsfaith/krakend-lua/proxy/backend": {
+                    "sources": ["parser1.lua"],
+                    "allow_open_libs": true,
+                    "post": "local r = response.load(); splitMe('&', r);",
+                    "live": true
+                }
+            },
+            "url_pattern": "/auth/realms/master/protocol/openid-connect/token",
+            "encoding": "no-op",
+            "host": [
+                "http://10.255.246.93:8081"
             ]
         }
     ]

@@ -3,12 +3,13 @@ version: "3.7"
 services:
   krakend:
     image: frinx/krakend:${LOCAL_KRAKEND_IMAGE_TAG}
-    # user: root
+    user: root
     logging:
       driver: "json-file"
       options:
         max-file: "3"
         max-size: "10m"
+    command: "run -c /etc/krakend/krakend.json"
     environment:
       - FC_ENABLE=1
       - FC_SETTINGS=/etc/krakend/settings
@@ -18,8 +19,8 @@ services:
     # TODO fix x509 certificate errors
       - GODEBUG="x509ignoreCN=0"
     volumes:
-      - ${UF_CONFIG_PATH}/krakend:/etc/krakend:ro
-      - ${UF_CONFIG_PATH}/krakend/tls/${KRAKEND_TLS_PROTOCOL}:/etc/krakend/partials/tls:ro
+      - ${UF_CONFIG_PATH}/krakend:/etc/krakend
+      - ${UF_CONFIG_PATH}/krakend/tls/${KRAKEND_TLS_PROTOCOL}:/etc/krakend/partials/tls
     healthcheck:
       test: curl --silent --write-out 'HTTPSTATUS:%{http_code}' -X GET 'http://127.0.0.1:8080/__health' || exit 1
       interval: 10s
@@ -39,8 +40,8 @@ services:
       nproc:
         soft: ${KD_ULIMIT_NPROC_SOFT}
         hard: ${KD_ULIMIT_NPROC_HARD}
-    cap_drop:
-      - all
+    # cap_drop:
+    #   - all
     deploy:
       placement:
         constraints:
