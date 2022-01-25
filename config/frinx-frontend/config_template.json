@@ -15,5 +15,7 @@
   "usermanagement_enabled": false,
   "url_basename": "/frinxui",
   "uniconfig_api_docs_url": "/api/uniflow/docs-uniconfig",
-  "uniflow_api_docs_url":"/api/uniflow/docs"
+  "uniflow_api_docs_url":"/api/uniflow/docs",
+  "gamma_enabled": true,
+  "unistore_api_url": "/api/unistore"
 }

@@ -51,7 +51,6 @@
     "restconf": {
         // listening web server port
         "httpPort": 8181,
-        // IP address on which web server is listening to incoming requests (0.0.0.0 - addresses of all interfaces)
         "inetAddress": "0.0.0.0",
         // common URL prefix under which all resources and operations are registered
         "restconfServletContextPath": "/rests",
@@ -97,17 +96,19 @@
             }
         }
     },
+    "daexim": {
+        "daeximDirectory": "daexim"
+    },
     /*
     Settings for the Device Discovery service
     */
     "deviceDiscovery":{
         // A parameter that specifies the local address from which the scanning will be ran.
         "localAddress": "",
-        // A parameter that specifies the maximum pool size by the executor.
-        // If left empty, the default will be CPU_COUNT * 8.
-        //"maxPoolSize": 20,
+        // A parameter that specifies the amount of threads that will the service use.
+        "threadAmount": 4,
         // A parameter that specifies the maximum limit of IP addresses that the service can process in one request.
-        "addressCheckLimit": 254
+        "addressCheckLimit": 256
     },
     /*
     DB persistence settings via environment variables.

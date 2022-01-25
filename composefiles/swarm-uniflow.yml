@@ -40,7 +40,8 @@ services:
       - AZURE_KRAKEND_PLUGIN_JWT_VALUE_PREFIX=Bearer
       - AZURE_KRAKEND_PLUGIN_GROUP_DISABLE=false
       # UNICONFIG RBAC SETTINGS
-      - UNICONFIG_CONTROLLER_ADMIN_GROUP=${ADMIN_GROUP}
+      - UNICONFIG_CONTROLLER_ADMIN_GROUP=${ADMIN_GROUP},Bearer.ReadWrite
+      - UNISTORE_CONTROLLER_ADMIN_GROUP=${ADMIN_GROUP}
       # - FC_OUT=/etc/krakend/output.json
       # Ignore x509 certificate errors
       - GODEBUG="x509ignoreCN=0"
@@ -325,6 +326,7 @@ services:
       - OAUTH2=${JWT_PRODUCTION}
       - OAUTH2_AUTH_URL=${AZURE_LOGIN_URL}/${AZURE_TENANT_NAME}/oauth2/v2.0/authorize
       - OAUTH2_TOKEN_URL=/api/uniflow/docs/token
+      - ADMIN_ACCESS_ROLE=${ADMIN_GROUP}
     healthcheck:
       test: curl --silent --write-out 'HTTPSTATUS:%{http_code}' -X GET 'http://127.0.0.1:8088/probe/readiness' && curl -I -XGET http://conductor-server:8080/health || exit 1
       interval: 10s
@@ -368,8 +370,8 @@ services:
         target: /set_env_secrets.sh
         mode: 0777
     environment:
-      - RM_ADMIN_GROUPS=${ADMIN_GROUP}
-      - RM_ADMIN_ROLES=''
+      - RM_ADMIN_GROUPS=''
+      - RM_ADMIN_ROLES=${ADMIN_GROUP}
       - RM_LOG_PATH=/var/log/rm.log
       - RM_LOG_LEVEL=warn
       - WASMER_MAX_TIMEOUT_MILLIS=10000
