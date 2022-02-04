@@ -49,7 +49,7 @@ function user_group_auth(request, permited_groups)
             end
         end
         print("User has no permissions for executing request, bad group")
-        custom_error("ROLE_PERMISSION_ERROR", 419)
+        custom_error("ROLE_PERMISSION_ERROR", 427)
     end
 end
 
